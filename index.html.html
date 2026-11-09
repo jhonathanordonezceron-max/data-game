@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DATA GAME | Pilas y Colas</title>
+<style>
+:root{--navy:#10233f;--blue:#2463eb;--orange:#f59e0b;--bg:#f3f6fb;--ink:#18263b;--muted:#64748b;--white:#fff;--green:#16845b;--red:#c2413b}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(120deg,#10233f,#1e4b82);color:white;padding:30px 18px;text-align:center}
+header h1{margin:0;font-size:clamp(28px,5vw,42px);letter-spacing:1px}header p{margin:10px 0 0;color:#dbeafe}
+main{max-width:1050px;margin:24px auto;padding:0 16px}
+nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:20px}
+button{border:0;border-radius:10px;padding:11px 16px;font-weight:bold;cursor:pointer;background:var(--blue);color:white}
+button:hover{filter:brightness(.94)}button.secondary{background:#e2e8f0;color:var(--ink)}button.orange{background:var(--orange);color:#302006}button:disabled{opacity:.45;cursor:not-allowed}
+.panel{display:none;background:white;border-radius:18px;padding:22px;margin:14px 0;box-shadow:0 8px 25px #10233f12}.panel.active{display:block}
+h2{margin-top:0;color:var(--navy)}h3{color:var(--navy)}.intro{text-align:center;padding:34px 20px}.intro .big{font-size:56px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+.card{border:1px solid #dbe3ef;border-radius:14px;padding:18px;text-align:center;background:#fbfdff}
+.card .symbol{font-size:38px}.muted{color:var(--muted)}.tag{display:inline-block;padding:5px 10px;border-radius:20px;background:#eaf1ff;color:#1d4ed8;font-weight:bold;font-size:13px}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}.row input{padding:11px;border:1px solid #cbd5e1;border-radius:9px;min-width:180px;flex:1}
+.stage{min-height:220px;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:14px;padding:18px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:8px;margin:15px 0}
+.item{background:#2463eb;color:white;border-radius:9px;padding:11px 25px;min-width:120px;text-align:center;font-weight:bold;box-shadow:0 3px 0 #1746ad}
+.queue{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;min-height:90px}.queue .item{min-width:75px}
+.note{background:#eff6ff;border-left:4px solid var(--blue);padding:12px;border-radius:8px;margin-top:12px}
+.feedback{font-weight:bold;min-height:24px;margin-top:12px}.good{color:var(--green)}.bad{color:var(--red)}
+.question{border:1px solid #dbe3ef;padding:16px;border-radius:12px;margin:14px 0}.answers{display:grid;gap:8px}.answers button{text-align:left;background:#eef2ff;color:#1e3a8a}.answers button:focus{outline:3px solid #93c5fd}
+.score{font-size:18px;font-weight:bold;color:var(--green)}footer{text-align:center;color:var(--muted);padding:24px;font-size:13px}
+@media(max-width:560px){.panel{padding:16px}.row button{flex:1}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎮 DATA GAME</h1>
+  <p>¡Aprende jugando con estructuras de datos!</p>
+  <p><strong>PILAS · LIFO</strong> &nbsp; | &nbsp; <strong>COLAS · FIFO</strong></p>
+</header>
+<main>
+<nav>
+  <button onclick="show('inicio')">Inicio</button>
+  <button onclick="show('pila')">Pilas</button>
+  <button onclick="show('cola')">Colas</button>
+  <button onclick="show('reto')">Reto educativo</button>
+  <button class="secondary" onclick="show('diferencias')">Comparación</button>
+</nav>
+
+<section id="inicio" class="panel active intro">
+  <div class="big">🧠📚</div>
+  <h2>¡Bienvenido a DATA GAME!</h2>
+  <p>En este juego aprenderás cómo funcionan las estructuras de datos <strong>PILA</strong> y <strong>COLA</strong> mediante ejemplos y actividades interactivas.</p>
+  <div class="cards">
+    <div class="card"><div class="symbol">🍽️</div><h3>PILA — LIFO</h3><p>El último elemento en entrar es el primero en salir.</p><button onclick="show('pila')">Practicar pilas</button></div>
+    <div class="card"><div class="symbol">🧍🧍🧍</div><h3>COLA — FIFO</h3><p>El primero en entrar es el primero en salir.</p><button onclick="show('cola')">Practicar colas</button></div>
+  </div>
+  <div class="note"><strong>Objetivo:</strong> aprender, experimentar y superar los retos. ¡Comienza por Pilas o Colas!</div>
+</section>
+
+<section id="pila" class="panel">
+  <span class="tag">LIFO · Last In, First Out</span>
+  <h2>1. ¿Qué es una PILA?</h2>
+  <p>Una pila es una estructura donde el <strong>último elemento que entra es el primero que sale</strong>. Imagina una pila de platos: colocas uno encima de otro y retiras primero el que está arriba.</p>
+  <h3>¡Interactúa con la pila!</h3>
+  <div class="row"><input id="stackInput" maxlength="18" placeholder="Escribe un elemento (ej. Plato A)"><button onclick="pushStack()">PUSH · Agregar</button><button class="orange" onclick="popStack()">POP · Retirar</button><button class="secondary" onclick="resetStack()">Reiniciar</button></div>
+  <div class="stage"><strong>TOPE DE LA PILA ↓</strong><div id="stackView"></div><strong>BASE DE LA PILA</strong></div>
+  <p id="stackCount" class="score">Elementos: 0</p><div id="stackMsg" class="feedback">Agrega tu primer elemento con PUSH.</div>
+  <div class="note"><strong>Recuerda:</strong> PUSH agrega un elemento en el tope y POP retira el elemento del tope.</div>
+</section>
+
+<section id="cola" class="panel">
+  <span class="tag">FIFO · First In, First Out</span>
+  <h2>2. ¿Qué es una COLA?</h2>
+  <p>Una cola es una estructura donde el <strong>primer elemento que entra es el primero que sale</strong>. Imagina personas esperando su turno en un banco: atienden primero a quien llegó primero.</p>
+  <h3>¡Interactúa con la cola!</h3>
+  <div class="row"><input id="queueInput" maxlength="18" placeholder="Escribe una persona (ej. Ana)"><button onclick="enqueue()">ENQUEUE · Llegar</button><button class="orange" onclick="dequeue()">DEQUEUE · Atender</button><button class="secondary" onclick="resetQueue()">Reiniciar</button></div>
+  <p class="muted">← Sale primero (frente) &nbsp;&nbsp; Entran nuevos elementos por el final →</p>
+  <div class="stage"><div id="queueView" class="queue"></div></div>
+  <p id="queueCount" class="score">Personas en la cola: 0</p><div id="queueMsg" class="feedback">Agrega la primera persona con ENQUEUE.</div>
+  <div class="note"><strong>Recuerda:</strong> ENQUEUE agrega al final y DEQUEUE retira al primero de la fila.</div>
+</section>
+
+<section id="reto" class="panel">
+  <span class="tag">Evaluación · +10 puntos por respuesta correcta</span>
+  <h2>3. ¡Pon a prueba lo aprendido!</h2>
+  <p>Responde las preguntas y comprueba cuánto aprendiste.</p>
+  <p class="score">Puntuación: <span id="points">0</span> pts</p>
+  <div id="quiz"></div>
+  <button class="secondary" onclick="restartQuiz()">Reiniciar reto</button>
+  <div id="quizResult" class="feedback"></div>
+</section>
+
+<section id="diferencias" class="panel">
+  <h2>4. Diferencias entre PILAS y COLAS</h2>
+  <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;text-align:left">
+  <thead><tr style="background:#eaf1ff"><th style="padding:12px">Característica</th><th style="padding:12px">PILA</th><th style="padding:12px">COLA</th></tr></thead>
+  <tbody>
+  <tr><td style="padding:12px;border-bottom:1px solid #ddd">Principio</td><td style="padding:12px;border-bottom:1px solid #ddd">LIFO</td><td style="padding:12px;border-bottom:1px solid #ddd">FIFO</td></tr>
+  <tr><td style="padding:12px;border-bottom:1px solid #ddd">Entra</td><td style="padding:12px;border-bottom:1px solid #ddd">Por el tope</td><td style="padding:12px;border-bottom:1px solid #ddd">Por el final</td></tr>
+  <tr><td style="padding:12px;border-bottom:1px solid #ddd">Sale</td><td style="padding:12px;border-bottom:1px solid #ddd">Por el tope</td><td style="padding:12px;border-bottom:1px solid #ddd">Por el frente</td></tr>
+  <tr><td style="padding:12px;border-bottom:1px solid #ddd">Ejemplo</td><td style="padding:12px;border-bottom:1px solid #ddd">Platos apilados</td><td style="padding:12px;border-bottom:1px solid #ddd">Fila del banco</td></tr>
+  <tr><td style="padding:12px">Operaciones</td><td style="padding:12px">PUSH / POP</td><td style="padding:12px">ENQUEUE / DEQUEUE</td></tr>
+  </tbody></table></div>
+  <h3>5. ¿Cómo presentar este proyecto en clase?</h3>
+  <ol><li><strong>Introducción:</strong> explica que DATA GAME enseña dos estructuras de datos.</li><li><strong>Pilas:</strong> agrega y retira elementos para demostrar LIFO.</li><li><strong>Colas:</strong> agrega personas y atiende la primera para demostrar FIFO.</li><li><strong>Práctica:</strong> invita a un compañero a interactuar.</li><li><strong>Evaluación:</strong> termina con el reto de preguntas.</li></ol>
+</section>
+</main>
+<footer>DATA GAME · Proyecto educativo de Estructuras de Datos · PILAS y COLAS</footer>
+<script>
+let stack=[], queue=[], points=0, answered=new Set();
+const $=id=>document.getElementById(id);
+function show(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));$(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function pushStack(){let v=$('stackInput').value.trim();if(!v){$('stackMsg').textContent='Escribe un elemento antes de agregarlo.';return;}stack.push(v);$('stackInput').value='';renderStack();$('stackMsg').textContent='¡'+v+' entró al tope de la pila!';$('stackMsg').className='feedback good';}
+function popStack(){if(!stack.length){$('stackMsg').textContent='La pila está vacía. No hay elementos para retirar.';$('stackMsg').className='feedback bad';return;}let v=stack.pop();renderStack();$('stackMsg').textContent='Salió "'+v+'", el último que había entrado.';$('stackMsg').className='feedback good';}
+function renderStack(){$('stackView').innerHTML=stack.slice().reverse().map((v,i)=>'<div class="item">'+esc(v)+(i===0?' · TOPE':'')+'</div>').join('');$('stackCount').textContent='Elementos: '+stack.length;}
+function resetStack(){stack=[];renderStack();$('stackMsg').textContent='Pila reiniciada.';$('stackMsg').className='feedback';}
+function enqueue(){let v=$('queueInput').value.trim();if(!v){$('queueMsg').textContent='Escribe una persona antes de agregarla.';return;}queue.push(v);$('queueInput').value='';renderQueue();$('queueMsg').textContent='¡'+v+' llegó al final de la cola!';$('queueMsg').className='feedback good';}
+function dequeue(){if(!queue.length){$('queueMsg').textContent='La cola está vacía. No hay personas para atender.';$('queueMsg').className='feedback bad';return;}let v=queue.shift();renderQueue();$('queueMsg').textContent='Se atendió a "'+v+'", la primera persona que llegó.';$('queueMsg').className='feedback good';}
+function renderQueue(){$('queueView').innerHTML=queue.map((v,i)=>'<div class="item">'+(i===0?'▶ ':'')+esc(v)+(i===0?' · FRENTE':'')+'</div>').join('');$('queueCount').textContent='Personas en la cola: '+queue.length;}
+function resetQueue(){queue=[];renderQueue();$('queueMsg').textContent='Cola reiniciada.';$('queueMsg').className='feedback';}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const qs=[
+{q:'¿Qué significa LIFO?',a:['Primero en entrar, primero en salir','Último en entrar, primero en salir','Elementos que salen al azar'],c:1,e:'En una pila, el último elemento agregado es el primero que se retira.'},
+{q:'¿Cuál operación agrega un elemento a una pila?',a:['POP','DEQUEUE','PUSH'],c:2,e:'PUSH coloca un nuevo elemento en el tope de la pila.'},
+{q:'En una cola, ¿quién sale primero?',a:['El primero que llegó','El último que llegó','El que está en la mitad'],c:0,e:'FIFO significa primero en entrar, primero en salir.'},
+{q:'¿Cuál es un ejemplo cotidiano de una pila?',a:['Una fila del banco','Platos apilados','Personas en una taquilla'],c:1,e:'Al retirar platos apilados, normalmente tomas primero el que está arriba.'},
+{q:'¿Qué operación retira al primer elemento de una cola?',a:['PUSH','POP','DEQUEUE'],c:2,e:'DEQUEUE retira el elemento que está al frente de la cola.'}
+];
+function renderQuiz(){$('quiz').innerHTML=qs.map((q,i)=>'<div class="question"><strong>'+(i+1)+'. '+q.q+'</strong><div class="answers">'+q.a.map((a,j)=>'<button '+(answered.has(i)?'disabled':'')+' onclick="answer('+i+','+j+')">'+a+'</button>').join('')+'</div><div id="qfb'+i+'" class="feedback"></div></div>').join('');}
+function answer(i,j){if(answered.has(i))return;answered.add(i);let q=qs[i],correct=j===q.c;if(correct)points+=10;$('points').textContent=points;$('qfb'+i).textContent=(correct?'¡Correcto! +10 puntos. ':'No es correcto. ')+q.e;$('qfb'+i).className='feedback '+(correct?'good':'bad');renderQuiz();$('qfb'+i).textContent=(correct?'¡Correcto! +10 puntos. ':'No es correcto. ')+q.e;$('qfb'+i).className='feedback '+(correct?'good':'bad');if(answered.size===qs.length)$('quizResult').textContent='¡Reto terminado! Tu puntuación final es '+points+' de 50 puntos.';}
+function restartQuiz(){points=0;answered=new Set();$('points').textContent=points;$('quizResult').textContent='';renderQuiz();}
+renderStack();renderQueue();renderQuiz();
+</script>
+</body>
+</html>
